@@ -101,6 +101,7 @@ public class CamelConfiguration extends RouteBuilder {
             // Auditing
             .routeId("kicSimulator")
             .routeDescription("kicDataSimulator")
+            .setBody(simple("Executed Event at "+ "${date:now:yyyy-MM-dd} "+ "${date:now:HH:mm:ss:SSS}"))
             .convertBodyTo(String.class)
             .setProperty("processingtype").constant("kic-sim")
             .setProperty("appname").constant("iDAAS-DataSimulator-KIC")
@@ -110,7 +111,7 @@ public class CamelConfiguration extends RouteBuilder {
             .setProperty("camelID").simple("${camelId}")
             .setProperty("exchangeID").simple("${exchangeId}")
             .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
+            .setProperty("bodyData").simple("${body}" )
             .setProperty("processname").constant("Input")
             .setProperty("auditdetails").constant("KIC Simulation event was processed, parsed and put into topic")
             //.wireTap("direct:auditing")

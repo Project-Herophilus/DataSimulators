@@ -25,14 +25,29 @@ public class ConfigProperties {
     //Variables
     // Kafka
     private String kafkaBrokers;
+    private String timerSeconds;
+    private Integer processingCount;
 
     // Getters
     // Getters: Kafka Brokers
     public String getKafkaBrokers() { return kafkaBrokers; }
 
+    public String getTimerSeconds() {
+        return timerSeconds;
+    }
+
+    public Integer getProcessingCount() {
+        return processingCount;
+    }
     // Setters
     // Setters: Kafka Brokers
     public void setKafkaBrokers(String kafkaBrokers) { this.kafkaBrokers = kafkaBrokers; }
+    public void setTimerSeconds(String timerSeconds) {
+        this.timerSeconds = timerSeconds;
+    }
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
+    }
 
 
 }
