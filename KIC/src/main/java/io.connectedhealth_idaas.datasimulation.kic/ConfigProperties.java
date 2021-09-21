@@ -27,6 +27,8 @@ public class ConfigProperties {
     private String kafkaBrokers;
     // Platform Topics
     private String kicTopicName;
+    private String timerSeconds;
+    private Integer processingCount;
 
     // Getters
     // Getters: Kafka Brokers
@@ -35,6 +37,12 @@ public class ConfigProperties {
     }
     // Getters: Platform Topics
     public String getkicTopicName() { return kicTopicName; }
+    public String getTimerSeconds() {
+        return timerSeconds;
+    }
+    public Integer getProcessingCount() {
+        return processingCount;
+    }
 
     // Setters
     // Setters: Kafka Brokers
@@ -43,5 +51,11 @@ public class ConfigProperties {
     }
     // Setters: Kafka Topics
     public void setkicTopicName(String kicTopicName) { this.kicTopicName = kicTopicName; }
+    public void setTimerSeconds(String timerSeconds) {
+        this.timerSeconds = timerSeconds;
+    }
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
+    }
 
 }

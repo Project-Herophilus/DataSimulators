@@ -63,6 +63,13 @@ public class CamelConfiguration extends RouteBuilder {
   private String getKafkaTopicUri(String topic) {
     return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
   }
+  private String getTimer(String timerSeconds) {
+    return "timer://pollTimer?period=" + timerSeconds ;
+  }
+  private Integer getCounter(Integer recordCount) {
+    return recordCount ;
+  }
+
 
   @Override
   public void configure() throws Exception {
@@ -94,30 +101,48 @@ public class CamelConfiguration extends RouteBuilder {
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]");
 
     /*
-     *  It will automatically create the directory for you, you will just need to place files in it
      *
      */
-      from("timer://pollTimer?period=5s")
+    from(getTimer(config.getTimerSeconds()))
             // Auditing
-            .routeId("kicSimulator")
+            .routeId("kicFHIRSimulator")
             .routeDescription("kicDataSimulator")
             .setBody(simple("Executed Event at "+ "${date:now:yyyy-MM-dd} "+ "${date:now:HH:mm:ss:SSS}"))
             .convertBodyTo(String.class)
             .setProperty("processingtype").constant("kic-sim")
-            .setProperty("appname").constant("iDAAS-DataSimulator-KIC")
+            .setProperty("appname").constant("iDAAS-DataSimulator-FHIR")
             .setProperty("industrystd").constant("NA")
             .setProperty("messagetrigger").constant("NA")
             .setProperty("component").simple("${routeId}")
             .setProperty("camelID").simple("${camelId}")
             .setProperty("exchangeID").simple("${exchangeId}")
             .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}" )
+            .setProperty("bodyData").simple("${body}")
             .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").constant("KIC Simulation event was processed, parsed and put into topic")
+            .setProperty("auditdetails").constant("FHIR Simulation event was processed, parsed and put into topic")
             //.wireTap("direct:auditing")
+            //.loop(25).copy()
+            .loop(getCounter(config.getProcessingCount())).copy()
+            /* //.transform(body().append("B"))
+               .routeId("kicFHIRSimulator2")
+               .routeDescription("kicDataSimulator2")
+               .convertBodyTo(String.class)
+               .setProperty("processingtype").constant("kic-sim")
+               .setProperty("appname").constant("iDAAS-DataSimulator-FHIR")
+               .setProperty("industrystd").constant("NA")
+               .setProperty("messagetrigger").constant("NA")
+               .setProperty("component").simple("${routeId}")
+               .setProperty("camelID").simple("${camelId}")
+               .setProperty("exchangeID").simple("${exchangeId}")
+               .setProperty("internalMsgID").simple("${id}")
+               .setProperty("bodyData").simple("${body}")
+               .setProperty("processname").constant("Input")
+               .setProperty("auditdetails").constant("FHIR Simulation event was processed, parsed and put into topic")
+               //.transform(body()).copy()*/
             .to("direct:auditing")
-            // Process Acks that come back ??
-        ;
+            .end()
+            .to("mock:loop")
+    ;
 
   }
 }
