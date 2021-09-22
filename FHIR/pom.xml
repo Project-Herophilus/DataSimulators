@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.datasimulation.fhir</groupId>
-    <artifactId>io.connectedhealth_idaas.datasimulation.fhir</artifactId>
+    <artifactId>io.connectedhealth_idaas.datasimulation</artifactId>
     <version>4.01</version>
 
     <properties>
