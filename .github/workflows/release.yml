@@ -34,5 +34,5 @@ jobs:
         release-branch-name: ${{ github.event.inputs.branch }}
         version-major: ${{ github.event.inputs.increment-major }}
         version-minor: ${{ github.event.inputs.increment-minor }}
-        maven-args: "-Dmaven.deploy.skip=true"
+        maven-args: "-Dmaven.deploy.skip=true -Dmaven.javadoc.skip=true"
         git-release-bot-name: "idaas-bot"
