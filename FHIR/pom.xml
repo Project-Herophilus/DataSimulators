@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.datasimulation.fhir</groupId>
     <artifactId>io.connectedhealth_idaas.datasimulation</artifactId>
-    <version>4.01</version>
+    <version>5.0.1</version>
 
     <properties>
         <camel.version>3.9.0</camel.version>
