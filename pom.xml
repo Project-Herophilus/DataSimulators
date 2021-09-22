@@ -6,7 +6,7 @@
 
     <groupId>io.connectedhealth_idaas.data</groupId>
     <artifactId>io.connectedhealth_idaas</artifactId>
-    <version>5.0.1</version>
+    <version>5.0.2-SNAPSHOT</version>
     <name>iDAAS Data Simulators</name>
     <packaging>pom</packaging>
 
@@ -14,7 +14,7 @@
       <connection>scm:git:https://github.com/Project-Herophilus/DataSimulators.git</connection>
       <url>https://github.com/Project-Herophilus/DataSimulators</url>
       <developerConnection>scm:git:https://github.com/Project-Herophilus/DataSimulators</developerConnection>
-      <tag>v5.0.1</tag>
+      <tag>v1.0.0</tag>
     </scm>
 
     <properties>
