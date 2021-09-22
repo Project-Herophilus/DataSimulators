@@ -6,14 +6,14 @@
 
     <groupId>io.connectedhealth_idaas.data</groupId>
     <artifactId>io.connectedhealth_idaas</artifactId>
-    <version>5.0.4-SNAPSHOT</version>
+    <version>5.0.1-SNAPSHOT</version>
     <name>iDAAS Data Simulators</name>
     <packaging>pom</packaging>
 
     <scm>
-      <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Route.git</connection>
-      <url>https://github.com/Project-Herophilus/iDaaS-Route</url>
-      <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Route</developerConnection>
+      <connection>scm:git:https://github.com/Project-Herophilus/DataSimulators.git</connection>
+      <url>https://github.com/Project-Herophilus/DataSimulators</url>
+      <developerConnection>scm:git:https://github.com/Project-Herophilus/DataSimulators</developerConnection>
       <tag>v1.0.0</tag>
     </scm>
 
@@ -26,7 +26,7 @@
     </properties>
     
     <modules>
-    	<module>iDaaS-Route-DataDist</module>
+    	<module>FHIR</module>
     </modules>
 
     <profiles>
