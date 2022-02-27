@@ -299,3 +299,6 @@ typings/
 
 # IntelliJ idea directory exclusion
 /.idea/
+/FHIR/.idea
+/HL7/.idea
+/KIC/.idea
