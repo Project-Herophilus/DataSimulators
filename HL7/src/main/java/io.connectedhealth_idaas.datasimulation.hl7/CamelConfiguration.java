@@ -67,14 +67,14 @@ public class CamelConfiguration extends RouteBuilder {
     return kafkaEndpoint;
   }
 
-  @Bean
-  private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint) {
-    KafkaComponent kafka = new KafkaComponent();
-    return kafka;
-  }
-
   private String getKafkaTopicUri(String topic) {
     return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
+  }
+  private String getTimer(String timerSeconds) {
+    return "timer://pollTimer?period=" + timerSeconds ;
+  }
+  private Integer getCounter(Integer recordCount) {
+    return recordCount ;
   }
 
   private String getHL7Uri(String hostID, int port) {

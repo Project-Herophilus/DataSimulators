@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.datasimulation.kic;
+package io.connectedhealth_idaas.datasimulation.thirdparty;
 
 import java.util.ArrayList;
 import java.util.List;

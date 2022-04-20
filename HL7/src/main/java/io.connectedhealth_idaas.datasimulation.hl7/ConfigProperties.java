@@ -25,6 +25,10 @@ public class ConfigProperties {
     //Variables
     // Kafka
     private String kafkaBrokers;
+
+    private String timerSeconds;
+    private Integer processingCount;
+
     //HL7 Server IP-Host
     private String adtHost;
     private String ormHost;
@@ -67,6 +71,13 @@ public class ConfigProperties {
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
+    public String getTimerSeconds() {
+        return timerSeconds;
+    }
+    public Integer getProcessingCount() {
+        return processingCount;
+    }
+
     // Getters: HL7 Server Hosts
     public String getAdtHost() {
         return adtHost;
@@ -141,6 +152,13 @@ public class ConfigProperties {
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
+    public void setTimerSeconds(String timerSeconds) {
+        this.timerSeconds = timerSeconds;
+    }
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
+    }
+
     // Setters: HL7 Hosts
     public void setAdtHost(String adtHost) {
         this.adtHost = adtHost;

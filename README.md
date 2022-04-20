@@ -28,6 +28,10 @@ Data Simulator FHIR is intended to work specifically with FHIR based systems.
 Data Simulator KIC is intended to work specifically to test iDaaS KIC.<br>
 [Data Simulator KIC Readme](KIC/README.md)
 
+## iDaaS-DataSimulator-ThirdParty
+Data Simulator KIC is intended to work specifically to test iDaaS KIC.<br>
+[Data Simulator ThirdParty Readme](ThirdParty/README.md)
+
 # Add-Ons
 To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
 
@@ -50,11 +54,12 @@ Every asset has its own defined specific port, we have done this to ensure multi
 ## Administrative Interface(s) Specifics
 For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-| iDaaS Data Simulators              | Port | Admin URL   | JMX URL|                                                                                   
-|----------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
-| iDaaS Data Simulator HL7                 | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-| iDaaS Data Simulator FHIR                | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Data Simulator FHIR          | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Data Simulators           | Port | Admin URL                                        | JMX URL                                                                                   |                                                                                   
+|---------------------------------|------|--------------------------------------------------|-------------------------------------------------------------------------------------------| 
+| iDaaS Data Simulator HL7        | 9960 | http://localhost:9960/actuator/hawtio/index.html | http://localhost:9960/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
+| iDaaS Data Simulator FHIR       | 9961 | http://localhost:9961/actuator/hawtio/index.html | http://localhost:9961/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Data Simulator KIC        | 9962 | http://localhost:9962/actuator/hawtio/index.html | http://localhost:9962/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Data Simulator ThirdParty | 9963 | http://localhost:9963/actuator/hawtio/index.html | http://localhost:9963/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 
 # Platform General Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
