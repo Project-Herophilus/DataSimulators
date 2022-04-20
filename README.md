@@ -87,12 +87,3 @@ For all iDaaS design patterns it should be assumed that you will either install 
   - Open Source and Web based: [Kowl](https://github.com/redpanda-data/kowl)
   - Desktop Based and Paid Product after trial: [Offset Explorer](https://www.kafkatool.com/) 
 
-
-
-# Specific Simulators
-
-| Simulator | Details |
-| :---      | :----   | 
-|HL7 | Simulates from a defined directory HL7 file based messages being fed to a configured HL7 Server connection|
-|FHIR | Simulates from a defined directory FHIR file based messages being fed to a pre-configured FHIR endpoint|
-|KIC | Simulates data processing into KIC topic with the predefined structure.|
