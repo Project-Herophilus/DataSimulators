@@ -29,6 +29,7 @@
     	<module>FHIR</module>
         <module>HL7</module>
         <module>KIC</module>
+        <module>ThirdParty</module>
     </modules>
 
     <profiles>

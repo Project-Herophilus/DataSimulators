@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.datasimulation.fhir;
+package io.connectedhealth_idaas.datasimulation.thirdparty;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -25,12 +25,18 @@ public class ConfigProperties {
     //Variables
     // Kafka
     private String kafkaBrokers;
+    // Platform Topics
+    private String kicTopicName;
     private String timerSeconds;
     private Integer processingCount;
 
     // Getters
     // Getters: Kafka Brokers
-    public String getKafkaBrokers() { return kafkaBrokers; }
+    public String getKafkaBrokers() {
+        return kafkaBrokers;
+    }
+    // Getters: Platform Topics
+    public String getkicTopicName() { return kicTopicName; }
     public String getTimerSeconds() {
         return timerSeconds;
     }
@@ -40,13 +46,16 @@ public class ConfigProperties {
 
     // Setters
     // Setters: Kafka Brokers
-    public void setKafkaBrokers(String kafkaBrokers) { this.kafkaBrokers = kafkaBrokers; }
+    public void setKafkaBrokers(String kafkaBrokers) {
+        this.kafkaBrokers = kafkaBrokers;
+    }
+    // Setters: Kafka Topics
+    public void setkicTopicName(String kicTopicName) { this.kicTopicName = kicTopicName; }
     public void setTimerSeconds(String timerSeconds) {
         this.timerSeconds = timerSeconds;
     }
     public void setProcessingCount(Integer processingCount) {
         this.processingCount = processingCount;
     }
-
 
 }
