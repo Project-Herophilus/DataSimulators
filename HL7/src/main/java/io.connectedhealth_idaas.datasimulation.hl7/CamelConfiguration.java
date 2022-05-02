@@ -47,20 +47,6 @@ public class CamelConfiguration extends RouteBuilder {
   @Autowired
   private ConfigProperties config;
 
- /* @Bean
-  private HL7MLLPNettyEncoderFactory hl7Encoder() {
-    HL7MLLPNettyEncoderFactory hl7mllp = new HL7MLLPNettyEncoderFactory();
-    hl7mllp.setCharset("iso-8859-1");
-    //encoder.setConvertLFtoCR(true);
-    return hl7mllp;
-  }
-  @Bean
-  private HL7MLLPNettyDecoderFactory hl7Decoder() {
-    HL7MLLPNettyDecoderFactory decoder = new HL7MLLPNettyDecoderFactory();
-    decoder.setCharset("iso-8859-1");
-    return decoder;
-  }*/
-
   @Bean
   private KafkaEndpoint kafkaEndpoint() {
     KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
@@ -75,12 +61,6 @@ public class CamelConfiguration extends RouteBuilder {
   }
   private Integer getCounter(Integer recordCount) {
     return recordCount ;
-  }
-
-  private String getHL7Uri(String hostID, int port) {
-    String portNumber = String.valueOf(port);
-    String svrConnection = "netty4:tcp://"+ hostID +":" + portNumber + "?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder";
-    return svrConnection;
   }
 
   private String getHL7Uri2(String hostID, int port) {
@@ -126,27 +106,34 @@ public class CamelConfiguration extends RouteBuilder {
      *  It will automatically create the directory for you, you will just need to place files in it
      *
      */
+
+
         from(getHL7UriDirectory(config.getHl7ADT_Directory()))
-            // Auditing
-            .routeId("hl7ADTSimulator")
-            .routeDescription("hl7ADTSimulator")
-            .convertBodyTo(String.class)
-            .setProperty("processingtype").constant("hl7-sim")
-            .setProperty("appname").constant("iDAAS-Connect-ThirdParty")
-            .setProperty("industrystd").constant("HL7")
-            .setProperty("messagetrigger").constant("ADT")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").constant("${file:name} - was processed, parsed and put into topic")
-            .wireTap("direct:auditing")
-            .to(getHL7Uri2(config.getAdtHost(),config.getAdtPort()))
+             .routeDescription("hl7ADTSimulator")
+             .routeId("hl7ADTSimulator")
+            .choice()
+              .when(simple("{{idaas.processADT}}"))
+              // Multiple Messages
+              .otherwise()
+              // Single Message
+              .convertBodyTo(String.class)
+              .setProperty("processingtype").constant("hl7-sim")
+              .setProperty("appname").constant("iDAAS-Connect-HL7")
+              .setProperty("industrystd").constant("HL7")
+              .setProperty("messagetrigger").constant("ADT")
+              .setProperty("component").simple("${routeId}")
+              .setProperty("camelID").simple("${camelId}")
+              .setProperty("exchangeID").simple("${exchangeId}")
+              .setProperty("internalMsgID").simple("${id}")
+              .setProperty("bodyData").simple("${body}")
+              .setProperty("processname").constant("Input")
+              .setProperty("auditdetails").constant("${file:name} - was processed, parsed and put into topic")
+              .wireTap("direct:auditing")
+              .to(getHL7Uri2(config.getAdtHost(),config.getAdtPort()))
+            .end()
             // Process Acks that come back ??
         ;
-
+    /*
     from(getHL7UriDirectory(config.getHl7ORM_Directory()))
             // Auditing
             .routeId("hl7ORMSimulator")
@@ -290,6 +277,8 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")
             .to(getHL7Uri2(config.getVxuHost(),config.getVxuPort()))
             // Process Acks that come back ??
+
+     */
     ;
   }
 }
