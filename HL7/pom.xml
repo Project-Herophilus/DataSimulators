@@ -5,7 +5,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.datasimulation.hl7</groupId>
     <artifactId>io.connectedhealth_idaas.datasimulation.hl7</artifactId>
-    <version>2022.03.01</version>
+    <version>1.9-SNAPSHOT</version>
 
     <properties>
         <camel.version>3.14.0</camel.version>

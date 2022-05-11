@@ -302,3 +302,13 @@ typings/
 /FHIR/.idea
 /HL7/.idea
 /KIC/.idea
+/ThirdParty/.idea
+
+# Data Directories Sub Data
+/data-input/simulators/adt
+/data-input/simulators/orm
+/data-input/simulators/oru
+/data-input/simulators/rde
+
+
+

@@ -4,9 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.connectedhealth_idaas.datasimulators</groupId>
-    <artifactId>io.connectedhealth_idaas</artifactId>
-    <version>2022.03.01-SNAPSHOT</version>
+    <groupId>io.connectedhealth_idaas.datasimulation</groupId>
+    <artifactId>io.connectedhealth_idaas.datasimulation</artifactId>
+    <version>1.9-SNAPSHOT</version>
     <name>iDAAS Data Simulators</name>
     <packaging>pom</packaging>
 
