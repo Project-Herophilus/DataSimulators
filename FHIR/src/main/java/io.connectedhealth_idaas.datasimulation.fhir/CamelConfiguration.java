@@ -120,11 +120,11 @@ public class CamelConfiguration extends RouteBuilder {
 
     from(getTimer(config.getTimerSeconds()))
         // Auditing
-        .routeId("kicFHIRSimulator")
-        .routeDescription("kicDataSimulator")
+        .routeId("FHIRSimulator")
+        .routeDescription("FHIRDataSimulator")
         .setBody(simple("Executed Event at "+ "${date:now:yyyy-MM-dd} "+ "${date:now:HH:mm:ss:SSS}"))
         .convertBodyTo(String.class)
-        .setProperty("processingtype").constant("kic-sim")
+        .setProperty("processingtype").constant("fhir-sim")
         .setProperty("appname").constant("iDAAS-DataSimulator-FHIR")
         .setProperty("industrystd").constant("NA")
         .setProperty("messagetrigger").constant("NA")
@@ -138,6 +138,7 @@ public class CamelConfiguration extends RouteBuilder {
         //.wireTap("direct:auditing")
         //.loop(25).copy()
         .loop(getCounter(config.getProcessingCount())).copy()
+
          /* //.transform(body().append("B"))
             .routeId("kicFHIRSimulator2")
             .routeDescription("kicDataSimulator2")
