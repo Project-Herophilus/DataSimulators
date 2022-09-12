@@ -1,53 +1,41 @@
 # HL7 Data Simulator
-# Data Simulator: HL7 File Based Processing
-
 
 ## Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
-1. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; however, we
-have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md) <br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md) <br/>
-No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending
-upon your implementation needs. Here are a few we have made to ensure: <br/>
+1. An existing Kafka (or some flavor of it) up and running. We have implemented iDaaS with numerous Kafka implementations. 
+Please see the following files we have included to try and help: <br/>
+[Kafka Non Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md) <br/>
+[Kafka Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md) <br/>
+No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some 
+changes depending upon your implementation needs. Here are a few we have made to ensure: <br/>
 In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
 system entering the group to read ALL the messages from the start. <br/>
 auto.offset.reset=earliest <br/>
-2. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html)<br/>
-3. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
+2. Java JDK: Java is what everything is developed in. The current supported JDK release(s) are 1.8 and 11. We strongly 
+recommend 11 as all the build actions and activities we do are based on this JDK release.
+<a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>.
+3. Maven: Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then 
+Maven would need to be intalled and runing for the environment you are using. More details about Maven can be 
+found [here](https://maven.apache.org/install.html)<br/>
+4. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
 run and any libraries need to be pulled down they can.<br/>
 
 # Scenario(s)
-This section is intended to cover any scenarios covered within this demo.
+This scenario follows a very common general clinical care implementation pattern for processing HL7 transactions. The 
+implementation pattern involves one system sending data to another system via the HL7 message standard protocol (MLLP). 
+The HL7 data simulator will connect and send a configurable number of HL7 transactions to the defined HL7 server 
+host and port. When the HL7 message is processed by the HL7 Server it will generate an HL7 ACK that is receives.
 
-## Basic HL7 Message Integration
-This repository follows a very common general clinical care implementation pattern. The implementation pattern involves one system sending data to
-another system via the HL7/MLLP message standard.
+ <img src="https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/DataFlow-HL7.png" width="800" height="600">
 
-|Identifier | Description |
-| ------------ | ----------- |
-| Healthcare Facility| MCTN |
-| Sending EMR/EHR | MMS |
-| HL7 Message Events | ADT (Admissions, Discharge and Transfers),ORM (Orders),ORU (Results) |
-<br/>
-It is important to know that for every HL7 Message Type/Event there is a specifically defined, and dedicated, HL7 socket server endpoint.
+It is important to know that for every HL7 Message Type/Event there is a specifically defined, and dedicated, HL7 socket 
+server endpoint.
 
-### Integration Data Flow Steps
-Here is a general visual intended to show the general data flow and how the accelerator design pattern is intended to work. <br/>
- <img src="https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/DataFlow-HL7.png" width="800" height="600">
-
-1. Any external connecting system will use an HL7 client (external to this application) will connect to the specifically defined HL7
-Server socket (one socket per datatype) and typically stay connected.
-2. The HL7 client will send a single HL7 based transaction to the HL7 server.
-3. iDAAS Connect HL7 will do the following actions:<br/>
-    a. Receive the HL7 message. Internally, it will audit the data it received to a specifically defined topic.<br/>
-    b. The HL7 message will then be processed to a specifically defined topic for this implementation. There is a
-    specific topic pattern -  for the facility and application each data type has a specific topic define for it.
-    For example: Admissions: MCTN_MMS_ADT, Orders: MCTN_MMS_ORM, Results: MCTN_MMS_ORU, etc.. <br/>
-    c. An acknowledgement will then be sent back to the hl7 client (this tells the client he can send the next message,
-    if the client does not get this in a timely manner it will resend the same message again until he receives an ACK).<br/>
-    d. The acknowledgement is also sent to the auditing topic location.<br/>
+## Additional Repositories Involved with This Scenario
+For this scenario you will need an existing system or capability to act as an HL7 Server. While any will do for this demonstration,
+and many have been tested we are going to write this from the implementation perspective that you are trying to 
+test [iDaaS Connect HL7](https://github.com/Project-Herophilus/iDaaS-Connect/blob/main/iDaaS-Connect-HL7/README.md) and its general capabilities. 
 
 # Start The Engine!!!
 This section covers the running of the solution. There are several options to start the Engine Up!!!
@@ -55,85 +43,136 @@ This section covers the running of the solution. There are several options to st
 ## Step 1: Kafka Server To Connect To
 In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
 Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+[Kafka Non Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
+[Kafka Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+As with all implementations we also have container based implementations of Kafka as well. These can be very simple to implement
+and include. 
 
-## Step 2: Running the App: Maven Commands or Code Editor
-This section covers how to get the application started.
-+ Maven: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
-following command: <br/>
+## Step 2: How To Get, Build and Run iDaaS-Connect Assets
+Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is
+intended to follow a specific format that covers a solution definition, how we look to continually improve, pre-requisities,
+implementation details including specialized configuration, known issues and their potential resolutions.
+However, there are a lot of individual capabilities, we have tried to keep content relevant and specific to
+cover specific topics.
+- For cloning, building and running of assets that content can be found
+  [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md).
+- Within each implementation there is a management console, the management console provides the same
+  interface and capabilities no matter what implementation you are working within, some specifics and
+  and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
+- If you are using containers, we maintain numerous assets [here](https://hub.docker.com/search?q=rhhcarch)
+ 
+## Specific Implementation Configuration Details
+There are several key details you must make decisions on and also configure. For all of these you will
+need to update the application.properties in accordance with these decisions.
+
+*- if you are using non-container assets then the settings can be found in the /src/properties/application.properties* <br/>
+*- containers ConfigMaps references would just not include the idaas. as part of the property name*
+
+### A. iDaaS Connect HL7
+The settings for usage of [iDaaS Connect HL7](https://github.com/Project-Herophilus/iDaaS-Connect/blob/main/iDaaS-Connect-HL7/README.md) 
+and its general capabilities below are ONLY a small section of the overall application.properties. If this is implemented in a 
+container these are defined as values within a config map. All the notes below are specific to ONLY getting
+an HL7 ADT Server up and running and all other capabilities are disabled to minimize complexity.
+
+Because you will be running this on some equipment in your infrastructure you will need to know the IP/hostname
+and make sure that all the routes and network details are worked out for it to be able to receive inbound data.
+If this is all running local on your machine you might need to have ports opened locally by IT staff or
+it just might work. Since, this component uses all IPs it is recommended that you know your IP or hostname.
+
+- The adtPort needs to be set to a port not in use, it will fail to start otherwise. This port will needed in
+the configuration of the data simulator next. 
+- The adtTopicName is the Kafka topic where the transactions once processed willend up
 ```
-mvn clean install
- ```
+management.port=9980
+server.port=9980
+server.max-http-header-size=200000
+# Management App Server Address
+server.address=0.0.0.0
+management.address=0.0.0.0
+# Kafka Configuration - use comma if multiple kafka servers are needed
+idaas.kafkaBrokers=localhost:9092
+idaas.integrationTopic=opsmgmt_platformtransactions
+idaas.terminologyTopic=idaas_terminologies
+idaas.fhirConversionTopic=idaas_ccdafhirconversion
+# Public Cloud
+idaas.cloudTopic=idaas_cloud
+idaas.processPublicCloud=false
+idaas.cloudAPI=urlendpoint
+# HL7 Specific properties
+# ADT
+idaas.hl7ADT_Directory=/data-input/hl7/adt
+idaas.adtPort=10001
+idaas.adtACKResponse=true
+idaas.adtTopicName=mctn_mms_adt
+```
+
+### B. iDaaS Data Simulator HL7
+Since this is the client it will need to know how to connect to the server in section A.
+Supported properties include (for this accelerator there is a block per message type that follows the same pattern):
+```
+# Server - Internal
+management.port=9960
+server.port=9960
+server.max-http-header-size=200000
+server.address=0.0.0.0
+management.address=0.0.0.0
+# Kafka
+idaas.kafkaBrokers=localhost:9092
+idaas.kicTopicName=opsmgmt_platformtransactions
+# Timing and Processing Counts
+idaas.timerSeconds=5s
+idaas.processingCount=1000
+# Connectivity Attributes
+# ADT
+idaas.processADT=true
+idaas.processADTVolume=false
+idaas.hl7ADT_Directory=/data-input/simulators/adt
+idaas.adtPort=<Port>
+idaas.adtHost=<IP or Host>
+idaas.adtACKResponse=true
+idaas.adtTopicName=mctn_mms_adt_client
+```
+
+## Step 3: Running the App: Maven Commands or Code Editor
+This section covers how to get the application started and running locally. There will be other sections added in the future
+for containers.
+
+### General Instructions
++ Your system has met all the pre-requisites.
++ You have cloned the repo(s) or downloaded the zip of rep and unzipped it. 
+
 You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
 Here is the command to run the design pattern from the command line: <br/>
 ```
 mvn spring-boot:run
  ```
-Depending upon if you have every run this code before and what libraries you have already in your local Maven instance it could take a few minutes.
-+ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
 
 # Running the Java JAR
-If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
-commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
+To run the code from a jar file.
++ Your system has met all the pre-requisites.
++ You have cloned the repo(s) or downloaded the zip of rep and unzipped it.
++ Maven build: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
+  following command: <br/>
+```
+mvn clean install
+```
++ Running the built jar from the maven build
 ```
 java -jar <jarfile>.jar 
  ```
 
-### Design Pattern/Accelerator Configuration
-All iDaaS Design Pattern/Accelelrators have application.properties files to enable some level of reusability of code and simplfying configurational enhancements.<br/>
-In order to run multiple iDaaS integration applications we had to ensure the internal http ports that
-the application uses. In order to do this we MUST set the server.port property otherwise it defaults to port 8080 and ANY additional
-components will fail to start. iDaaS Connect HL7 uses 9980. You can change this, but you will have to ensure other applications are not
-using the port you specify.
+### Specific Implementation Instructions
+These are specific to getting this solution to run.
 
-```properties
-server.port=9980
+#### A. iDaaS Connect HL7
++ You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
+Here is the command to run the design pattern from the command line: <br/>
 ```
-Once built you can run the solution by executing `./platform-scripts/start-solution.sh`.
-The script will startup Kafka and iDAAS server.
+mvn spring-boot:run
+ ```
 
-Alternatively, if you have a running instance of Kafka, you can start a solution with:
-`./platform-scripts/start-solution-with-kafka-brokers.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
-The script will startup iDAAS server.
+### Verfiying that it worked
 
-It is possible to overwrite configuration by:
-1. Providing parameters via command line e.g.
-`./start-solution.sh --idaas.adtPort=10009`
-2. Creating an application.properties next to the idaas-connect-hl7.jar in the target directory
-3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
-
-Supported properties include (for this accelerator there is a block per message type that follows the same pattern):
-```properties
-server.port=9980
-# Kafka Configuration - use comma if multiple kafka servers are needed
-idaas.kafkaBrokers=localhost:9092
-# Basics on properties
-idaas.hl7ADT_Directory=data/adt
-idaas.adtPort=10001
-idaas.adtACKResponse=true
-idaas.adtTopicName=mctn_mms_adt
-idaas.hl7ORM_Directory=data/orm
-```
-# Admin Interface - Management and Insight of Components
-Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
-connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
-by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
-This capability to enable would require a few additional properties to be set.
-
-Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
-
-Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
-
-## Administrative Interface(s) Specifics
-For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
-
-|<b> iDaaS Connect Asset | Port | Admin URL / JMX URL |
-| :---        | :----   | :--- |
-|iDaaS Connect HL7 | 9980| http://localhost:9980/actuator/hawtio/index.html / http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |
-
-If you would like to contribute feel free to, contributions are always welcome!!!!
 
 Happy using and coding....
 
