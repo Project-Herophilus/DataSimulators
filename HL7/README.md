@@ -65,13 +65,16 @@ cover specific topics.
 There are several key details you must make decisions on and also configure. For all of these you will
 need to update the application.properties in accordance with these decisions.
 
+*- if you are using non-container assets then the settings can be found in the /src/properties/application.properties* <br/>
+*- containers ConfigMaps references would just not include the idaas. as part of the property name*
+
 ### A. iDaaS Connect HL7
 The settings for usage of [iDaaS Connect HL7](https://github.com/Project-Herophilus/iDaaS-Connect/blob/main/iDaaS-Connect-HL7/README.md) 
 and its general capabilities below are ONLY a small section of the overall application.properties. If this is implemented in a 
 container these are defined as values within a config map. All the notes below are specific to ONLY getting
 an HL7 ADT Server up and running and all other capabilities are disabled to minimize complexity.
 
-Because you will be running this on some equipment in your infrastrucutre you will need to know the IP/hostname
+Because you will be running this on some equipment in your infrastructure you will need to know the IP/hostname
 and make sure that all the routes and network details are worked out for it to be able to receive inbound data.
 If this is all running local on your machine you might need to have ports opened locally by IT staff or
 it just might work. Since, this component uses all IPs it is recommended that you know your IP or hostname.
@@ -106,7 +109,7 @@ idaas.adtTopicName=mctn_mms_adt
 ### B. iDaaS Data Simulator HL7
 Since this is the client it will need to know how to connect to the server in section A.
 Supported properties include (for this accelerator there is a block per message type that follows the same pattern):
-```properties
+```
 # Server - Internal
 management.port=9960
 server.port=9960
@@ -137,41 +140,36 @@ for containers.
 ### General Instructions
 + Your system has met all the pre-requisites.
 + You have cloned the repo(s) or downloaded the zip of rep and unzipped it. 
-+ Maven: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
-following command: <br/>
-```
-mvn clean install
- ```
+
 You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
 Here is the command to run the design pattern from the command line: <br/>
 ```
 mvn spring-boot:run
  ```
-Depending upon if you have every run this code before and what libraries you have already in your local Maven instance it could take a few minutes.
-+ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
 
 # Running the Java JAR
-If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
-commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
+To run the code from a jar file.
++ Your system has met all the pre-requisites.
++ You have cloned the repo(s) or downloaded the zip of rep and unzipped it.
++ Maven build: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
+  following command: <br/>
+```
+mvn clean install
+```
++ Running the built jar from the maven build
 ```
 java -jar <jarfile>.jar 
  ```
+
 ### Specific Implementation Instructions
 These are specific to getting this solution to run.
 
 #### A. iDaaS Connect HL7
-+ Maven: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
-  following command: <br/>
-```
-mvn clean install
- ```
-You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
++ You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
 Here is the command to run the design pattern from the command line: <br/>
 ```
 mvn spring-boot:run
  ```
-
-
 
 ### Verfiying that it worked
 
