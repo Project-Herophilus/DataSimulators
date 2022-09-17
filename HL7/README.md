@@ -1,27 +1,9 @@
 # HL7 Data Simulator
 
 ## Pre-Requisites
-For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
+We have tried to consolidate all the needed pre-requisites [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/PreRequisites.md)
 
-1. An existing Kafka (or some flavor of it) up and running. We have implemented iDaaS with numerous Kafka implementations. 
-Please see the following files we have included to try and help: <br/>
-[Kafka Non Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md) <br/>
-[Kafka Windows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md) <br/>
-No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some 
-changes depending upon your implementation needs. Here are a few we have made to ensure: <br/>
-In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
-system entering the group to read ALL the messages from the start. <br/>
-auto.offset.reset=earliest <br/>
-2. Java JDK: Java is what everything is developed in. The current supported JDK release(s) are 1.8 and 11. We strongly 
-recommend 11 as all the build actions and activities we do are based on this JDK release.
-<a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>.
-3. Maven: Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then 
-Maven would need to be intalled and runing for the environment you are using. More details about Maven can be 
-found [here](https://maven.apache.org/install.html)<br/>
-4. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
-run and any libraries need to be pulled down they can.<br/>
-
-# Scenario(s)
+## Scenario(s)
 This scenario follows a very common general clinical care implementation pattern for processing HL7 transactions. The 
 implementation pattern involves one system sending data to another system via the HL7 message standard protocol (MLLP). 
 The HL7 data simulator will connect and send a configurable number of HL7 transactions to the defined HL7 server 
@@ -170,9 +152,14 @@ Here is the command to run the design pattern from the command line: <br/>
 ```
 mvn spring-boot:run
  ```
+or
+```
+java -jar <jarfile>.jar
+```
 
 ### Verfiying that it worked
-
+- Start your HL7 Server, in this case iDaaS Connect HL7
+- Start
 
 Happy using and coding....
 
