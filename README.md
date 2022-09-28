@@ -1,5 +1,5 @@
 # DataSimulators Background
-Data Simulators are designed and intended to help with implementation of iDaaS. Just to provide a visualization to show 
+Data Simulators are designed and intended to help with specific types of implementations. While they can benefit and help specifically with iDaaS they can, and have also been used for non-iDaaS specific implementations. Just to provide a visualization to show 
 how Data Simulators and how they fit into integration efforts. Below please find a visual that does visualize the entire 
 iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
