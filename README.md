@@ -3,7 +3,7 @@ Data Simulators are designed and intended to help with specific types of impleme
 how Data Simulators and how they fit into integration efforts. Below please find a visual that does visualize the entire 
 iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
-Here is a detailed and Cloud Agnostic visual:<br/>
+Here is a detailed and Cloud Agnostic visual:<br/><br/>
 ![iDaaS Cloud Agnostic Data Flow.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/Implementations/Implementations-Gen-CloudAgnostic.png)
 <br/>
 
