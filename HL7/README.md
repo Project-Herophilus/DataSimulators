@@ -25,7 +25,7 @@ Here is a consistent manner in the way you can clone, build and run this
 Please feel free to check out our [implementation guides](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/intro.md)
 and provide us any feedback.
 
-Benefits
+# Benefits
 
 - General way for analysts, developers and various other project resources to unit test HL7 v2 transactions
 against systems.
