@@ -24,3 +24,11 @@ Here is a consistent manner in the way you can clone, build and run this
 Please feel free to check out our [implementation guides](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/intro.md)
 and provide us any feedback.
 
+# Use Cases/Scenarios
+The following are the specific use cases/scenarios that can be followwd to help implement
+the FHIR Data Simulator.
+
+| Use Case                                                                                                                                                |
+|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [FHIR General Testing](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/DataSim-FHIR.md) |
+
