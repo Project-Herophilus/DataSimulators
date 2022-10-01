@@ -20,3 +20,21 @@ Here is a consistent manner in the way you can clone, build and run this
 # Detailed Implementation Guide
 Please feel free to check out our [implementation guides](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/intro.md)
 and provide us any feedback.
+
+Benefits
+
+- General way for analysts, developers and various other project resources to unit test HL7 v2 transactions
+against systems.
+- Very effective way to generally test one or more specific HL7 specific transactions.
+- Simply mechanism to enable performance testing against a measure volume of HL7 transactions.
+
+# Use Cases/Scenarios
+The following are the specific use cases/scenarios that can be followwd to help implement 
+the HL7 Data Simulator.
+
+| Use Case                |
+|-------------------------|
+| [HL7 General Testing](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/DataSim-HL7.md) |
+
+
+
