@@ -1,11 +1,15 @@
 Return to the <a href="https://project-herophilus.github.io/Project-Herophilus-Assets/" target="_blank">Main Page</a>
 
 # HL7 Data Simulator
-This component is intended to act as an HL7 client to enable connecting to HL7 MLLP Servers and process HL7 v2.x 
-messages. While we eill explain this from the context of [iDaaS-Connect-HL7](https://github.com/Project-Herophilus/iDaaS-Connect/tree/main/iDaaS-Connect-HL7). 
-When iDAAS-Connect-HL7 starts it creates a series of HL7 MLLP Server ports, a specific set of directories, and some servlet endpoints.  All of these
-endpoints are in place to enable processing of HL7 v2x messages, and CCDA documents. Once these HL7 MLLP Server ports are
-created then the HL7 Data Simulator(s) can connect to the specific HL7 MLLP specific port for the message type.
+
+The HL7 Data Simulator is specifically designed to enable testing of vendors HL7 capabilities. The HL7 Data Simulator is
+designed as an HL7 client that can process data from files, kafka topics or API endpoints. Beyond just using it for 
+general purpose simple testing it can also be configured for performance testing against HL7 servers.
+
+Systems that process HL7 data typically leverage an HL7 MLLP Servers, this enables it to process HL7 v2.x 
+messages. We eill explain this from the context of [iDaaS-Connect-HL7](https://github.com/Project-Herophilus/iDaaS-Connect/tree/main/iDaaS-Connect-HL7). 
+When iDAAS-Connect-HL7 starts it creates a series of connections to process data. Specifically for HL7 near real time transactions it has several MLLP Server ports defined, Once the platform starts all these HL7 MLLP Server ports are
+created and ready to process data. When these actiond occur the HL7 Data Simulator(s) can connect to the specific HL7 MLLP specific port for the message type.
 
 ![Data Flow](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/DataFlow-HL7.png)
 
