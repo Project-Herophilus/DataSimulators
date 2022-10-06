@@ -16,64 +16,19 @@
  */
 package io.connectedhealth_idaas.datasimulation.hl7;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-//import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaConstants;
-import org.apache.camel.component.kafka.KafkaEndpoint;
-//import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
-//import javax.jms.ConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-//import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-
-/*
- *
- */
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
-  private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
-
-  @Autowired
-  private ConfigProperties config;
-
-  @Bean
-  private KafkaEndpoint kafkaEndpoint() {
-    KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-    return kafkaEndpoint;
-  }
-
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-  }
-  private String getTimer(String timerSeconds) {
-    return "timer://pollTimer?period=" + timerSeconds ;
-  }
-  private Integer getCounter(Integer recordCount) {
-    return recordCount ;
-  }
-
-  private String getHL7Uri2(String hostID, int port) {
-    String mllpConnection = "mllp:"+ hostID + ":" + port;
-    return mllpConnection;
-  }
-
-  private String getHL7UriDirectory(String dirName) {
-    return "file:src/" + dirName + "?delete=true";
-  }
 
   @Override
   public void configure() throws Exception {
+
+    onException(Exception.class)
+      .handled(true)
+      .log(LoggingLevel.ERROR,"${exception}");
 
     /*
      * Direct actions used across platform
@@ -93,22 +48,16 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
-    /*
-     * Direct Logging
-     */
-    from("direct:logging")
-        .routeId("Logging")
-        .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]");
+        .convertBodyTo(String.class)
+        .to("kafka:opsmgmt_platformtransactions?brokers={{idaas.kafka.brokers}}");
+
 
     /*
      *  HL7 File to HL7 Server
      *  It will automatically create the directory for you, you will just need to place files in it
      *
      */
-
-
-        from(getHL7UriDirectory(config.getHl7ADT_Directory()))
+        from("file:src/{{idaas.hl7.adt.dir}}?delete=true")
              .routeDescription("hl7ADTSimulator")
              .routeId("hl7ADTSimulator")
             .choice()
@@ -129,7 +78,7 @@ public class CamelConfiguration extends RouteBuilder {
               .setProperty("processname").constant("Input")
               .setProperty("auditdetails").constant("${file:name} - was processed, parsed and put into topic")
               .wireTap("direct:auditing")
-              .to(getHL7Uri2(config.getAdtHost(),config.getAdtPort()))
+              .to("mllp:{{idaas.adt.host}}:{{idaas.adt.port}}")
             .end()
             // Process Acks that come back ??
         ;
