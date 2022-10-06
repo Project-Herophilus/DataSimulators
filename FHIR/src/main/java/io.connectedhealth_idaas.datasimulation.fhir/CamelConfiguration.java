@@ -16,25 +16,8 @@
  */
 package io.connectedhealth_idaas.datasimulation.fhir;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.LoggingLevel;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-//import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaConstants;
-import org.apache.camel.component.kafka.KafkaEndpoint;
-//import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
-//import javax.jms.ConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-//import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  *
@@ -42,46 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
-  private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
-  @Autowired
-  private ConfigProperties config;
-
- /* @Bean
-  private HL7MLLPNettyEncoderFactory hl7Encoder() {
-    HL7MLLPNettyEncoderFactory hl7mllp = new HL7MLLPNettyEncoderFactory();
-    hl7mllp.setCharset("iso-8859-1");
-    //encoder.setConvertLFtoCR(true);
-    return hl7mllp;
-  }
-  @Bean
-  private HL7MLLPNettyDecoderFactory hl7Decoder() {
-    HL7MLLPNettyDecoderFactory decoder = new HL7MLLPNettyDecoderFactory();
-    decoder.setCharset("iso-8859-1");
-    return decoder;
-  }*/
-
-  @Bean
-  private KafkaEndpoint kafkaEndpoint() {
-    KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-    return kafkaEndpoint;
-  }
-
-  @Bean
-  private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint) {
-    KafkaComponent kafka = new KafkaComponent();
-    return kafka;
-  }
-
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-  }
-  private String getTimer(String timerSeconds) {
-    return "timer://pollTimer?period=" + timerSeconds ;
-  }
-  private Integer getCounter(Integer recordCount) {
-    return recordCount ;
-  }
+  public static final String ROUTE_ID = "FHIRSimulator";
 
   @Override
   public void configure() throws Exception {
@@ -104,13 +49,8 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
-    /*
-     * Direct Logging
-     */
-    from("direct:logging")
-        .routeId("Logging")
-        .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]");
+        .convertBodyTo(String.class)
+        .to("kafka:{{idaas.kic.topic.name}}?brokers={{idaas.kafka.brokers}}");
 
     /*
      *  FHIR File to FHIR Server
@@ -118,10 +58,10 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
 
-    from(getTimer(config.getTimerSeconds()))
+    from("timer://pollTimer?period={{idaas.processing.count}}")
         // Auditing
-        .routeId("FHIRSimulator")
-        .routeDescription("FHIRDataSimulator")
+        .routeId(ROUTE_ID)
+        .routeDescription(ROUTE_ID)
         .setBody(simple("Executed Event at "+ "${date:now:yyyy-MM-dd} "+ "${date:now:HH:mm:ss:SSS}"))
         .convertBodyTo(String.class)
         .setProperty("processingtype").constant("fhir-sim")
@@ -135,30 +75,11 @@ public class CamelConfiguration extends RouteBuilder {
         .setProperty("bodyData").simple("${body}")
         .setProperty("processname").constant("Input")
         .setProperty("auditdetails").constant("FHIR Simulation event was processed, parsed and put into topic")
-        //.wireTap("direct:auditing")
-        //.loop(25).copy()
-        .loop(getCounter(config.getProcessingCount())).copy()
-
-         /* //.transform(body().append("B"))
-            .routeId("kicFHIRSimulator2")
-            .routeDescription("kicDataSimulator2")
-            .convertBodyTo(String.class)
-            .setProperty("processingtype").constant("kic-sim")
-            .setProperty("appname").constant("iDAAS-DataSimulator-FHIR")
-            .setProperty("industrystd").constant("NA")
-            .setProperty("messagetrigger").constant("NA")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").constant("FHIR Simulation event was processed, parsed and put into topic")
-            //.transform(body()).copy()*/
+        .loop(constant("{{idaas.processing.count}}"))
+            .copy()
+            .to("log://" + ROUTE_ID + "?showAll=true")
             .to("direct:auditing")
-        .end()
-        .to("mock:loop")
-    ;
+        .end();
 
   }
 }
