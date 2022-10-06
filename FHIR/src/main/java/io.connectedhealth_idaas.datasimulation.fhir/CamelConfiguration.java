@@ -16,6 +16,9 @@
  */
 package io.connectedhealth_idaas.datasimulation.fhir;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +33,10 @@ public class CamelConfiguration extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
+
+    onException(Exception.class)
+    .handled(true)
+    .log(LoggingLevel.ERROR,"${exception}");
 
     /*
      * Direct actions used across platform
@@ -49,7 +56,6 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class)
         .to("kafka:{{idaas.kic.topic.name}}?brokers={{idaas.kafka.brokers}}");
 
     /*
@@ -58,8 +64,7 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
 
-    from("timer://pollTimer?period={{idaas.processing.count}}")
-        // Auditing
+    from("timer://pollTimer?period={{idaas.timer.milli}}")
         .routeId(ROUTE_ID)
         .routeDescription(ROUTE_ID)
         .setBody(simple("Executed Event at "+ "${date:now:yyyy-MM-dd} "+ "${date:now:HH:mm:ss:SSS}"))
