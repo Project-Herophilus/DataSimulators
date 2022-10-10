@@ -16,57 +16,21 @@
  */
 package io.connectedhealth_idaas.datasimulation.kic;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-//import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaConstants;
-import org.apache.camel.component.kafka.KafkaEndpoint;
-//import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
-//import javax.jms.ConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-//import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 
-/*
- *
- */
+
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
-  private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
-
-  @Autowired
-  private ConfigProperties config;
-
-
-  @Bean
-  private KafkaEndpoint kafkaEndpoint() {
-    KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-    return kafkaEndpoint;
-  }
-
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-  }
-  private String getTimer(String timerSeconds) {
-    return "timer://pollTimer?period=" + timerSeconds ;
-  }
-  private Integer getCounter(Integer recordCount) {
-    return recordCount ;
-  }
-
 
   @Override
   public void configure() throws Exception {
+
+    onException(Exception.class)
+      .handled(true)
+      .log(LoggingLevel.ERROR,"${exception}");
 
     /*
      * Direct actions used across platform
@@ -86,18 +50,14 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
-    /*
-     * Direct Logging
-     */
-    from("direct:logging")
-        .routeId("Logging")
-        .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]");
+        .convertBodyTo(String.class)
+        .to("kafka:opsmgmt_platformtransactions?brokers={{}}");
+
 
     /*
      *
      */
-    from(getTimer(config.getTimerSeconds()))
+    from("timer://pollTimer?period={{idaas.timer.milli}}")
             // Auditing
             .routeId("kicFHIRSimulator")
             .routeDescription("kicDataSimulator")
@@ -116,7 +76,8 @@ public class CamelConfiguration extends RouteBuilder {
             .setProperty("auditdetails").constant("FHIR Simulation event was processed, parsed and put into topic")
             //.wireTap("direct:auditing")
             //.loop(25).copy()
-            .loop(getCounter(config.getProcessingCount())).copy()
+            .loop(constant("{{idaas.processing.count}}"))
+              .copy()
             /* //.transform(body().append("B"))
                .routeId("kicFHIRSimulator2")
                .routeDescription("kicDataSimulator2")
